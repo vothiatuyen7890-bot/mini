@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Chào mừng{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Mini-Blog PaaS Project ☁️</h1>
+        <p class="col-md-8 fs-4 mx-auto">Ứng dụng web được xây dựng bằng Python/Flask và triển khai trên môi trường PaaS (Codespaces).</p>
+        <p class="fs-5">Vui lòng đăng ký hoặc đăng nhập để quản lý tài khoản, file và bài viết.</p>
+        {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-2">Đăng ký ngay</a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg">Đăng nhập</a>
+        {% else %}
+        <a href="{{ url_for('dashboard') }}" class="btn btn-success btn-lg">Đi đến Dashboard</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Đăng Nhập{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">🔓 Đăng Nhập Hệ Thống</h3>
+                <form method="POST" action="{{ url_for('login') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Tên người dùng</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mật khẩu</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Đăng Nhập</button>
+                </form>
+                <p class="text-center mt-3">Chưa có tài khoản? <a href="{{ url_for('register') }}">Đăng ký ngay</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

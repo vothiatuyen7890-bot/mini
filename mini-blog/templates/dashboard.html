@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">📊 Bảng Điều Khiển (Dashboard)</h2>
+
+<div class="row">
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">👥 Tổng số User</h5>
+                <p class="card-text fs-2">{{ total_users }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">📂 Tổng số File</h5>
+                <p class="card-text fs-2">{{ total_files }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <h3 class="mt-4">Danh sách Tệp Tin của bạn ({{ current_user.username }})</h3>
+        <a href="{{ url_for('upload_file') }}" class="btn btn-sm btn-outline-primary mb-3">Tải Lên Tệp Mới</a>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Tệp</th>
+                    <th>Ngày Tải Lên</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in user_files %}
+                <tr>
+                    <td>{{ file.id }}</td>
+                    <td><a href="{{ url_for('static', filename='uploads/' + file.filename) }}" target="_blank">{{ file.filename }}</a></td>
+                    <td>{{ file.upload_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger disabled">Xóa</button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">Bạn chưa tải lên tệp nào.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <h3 class="mt-4">Thử nghiệm API (CRUD)</h3>
+        <p>Endpoint API cơ bản: <code>/api/posts</code></p>
+        <p>Bạn có thể dùng công cụ như Postman hoặc cURL để kiểm tra các phương thức GET, POST, PUT, DELETE.</p>
+    </div>
+</div>
+<!-- Thêm Danh Sách Bài Viết (Posts) -->
+        <h3 class="mt-5">Danh sách Bài Viết của bạn</h3>
+        <a href="{{ url_for('new_post') }}" class="btn btn-sm btn-success mb-3">Tạo Bài Viết Mới</a>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tiêu đề</th>
+                    <th>Tác giả</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Lặp qua các bài viết (posts) đã được truyền từ app.py -->
+                {% for post in user_posts %}
+                <tr>
+                    <td>{{ post.id }}</td>
+                    <td><a href="{{ url_for('view_post', post_id=post.id) }}">{{ post.title }}</a></td>
+                    <td>{{ post.author.username }}</td>
+                    <td>
+                        <a href="{{ url_for('view_post', post_id=post.id) }}" class="btn btn-sm btn-info text-white me-1">Xem</a>
+                        <button class="btn btn-sm btn-danger disabled">Xóa</button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">Bạn chưa tạo bài viết nào.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

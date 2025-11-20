@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Tải Lên Tệp{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">⬆️ Tải Lên Tệp Tin Mới</h2>
+        <form method="POST" action="{{ url_for('upload_file') }}" enctype="multipart/form-data" class="p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3">
+                <label for="file" class="form-label">Chọn Tệp</label>
+                <input class="form-control" type="file" id="file" name="file" required>
+                <div class="form-text">Các định dạng cho phép: txt, pdf, png, jpg, jpeg, gif.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Tải Lên</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
