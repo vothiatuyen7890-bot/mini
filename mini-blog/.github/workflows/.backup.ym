@@ -1,11 +1,11 @@
-# .github/workflows/backup.yml
 name: Database Backup
 
 on:
   schedule:
-    # Chạy mỗi ngày một lần vào lúc 00:00 UTC (Bạn có thể điều chỉnh thời gian)
-    - cron: '0 0 * * *'
-  workflow_dispatch: # Cho phép chạy thủ công
+    # Chạy mỗi ngày một lần vào lúc 00:00 UTC (khoảng 7h sáng giờ Việt Nam)
+    # Bạn có thể thay đổi: '*/15 * * * *' = mỗi 15 phút
+    - cron: '0 0 * * *' 
+  workflow_dispatch: # Cho phép chạy thủ công qua nút Run workflow
 
 jobs:
   backup:
@@ -14,24 +14,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Để script có thể truy cập file site.db đã được Codespace tạo, 
-      # bạn cần đảm bảo bạn đã commit file site.db lên repo trước đó.
-      
+      # --- 1. Chạy Script Backup ---
       - name: Run Backup Script
         # Cấp quyền thực thi và chạy script
         run: |
           chmod +x backup_db.sh
           bash backup_db.sh
 
+      # --- 2. Cấu hình Git và Commit file Backup mới ---
       - name: Commit files
         run: |
+          # Thiết lập thông tin user cho bot
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          # Chỉ thêm thư mục backups (nơi file mới được tạo)
           git add backups/
-          git commit -m "Auto backup database"
+          # Chỉ commit nếu có thay đổi (tránh commit rỗng)
+          git commit -m "Auto backup database" || echo "No changes to commit"
           
+      # --- 3. Đẩy lên GitHub ---
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main # Thay 'main' bằng tên branch của bạn
+          branch: main # Đảm bảo tên branch này khớp với branch của bạn
