@@ -2,8 +2,9 @@ name: Database Backup
 
 on:
   schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
+    # Chạy mỗi ngày một lần vào lúc 00:00 UTC (khoảng 7h sáng giờ Việt Nam)
+    - cron: '0 0 * * *' 
+  workflow_dispatch: # Cho phép chạy thủ công qua nút Run workflow
 
 jobs:
   backup:
@@ -12,21 +13,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # --- 1. Chạy Script Backup ---
       - name: Run Backup Script
         run: |
           chmod +x backup_db.sh
           bash backup_db.sh
 
+      # --- 2. Cấu hình Git và Commit file Backup mới ---
       - name: Commit files
         run: |
+          # Thiết lập thông tin user cho bot
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add backups/
+          # Thêm thư mục backups (đã fix đường dẫn trong script)
+          git add mini-blog/backups/
+          # Chỉ commit nếu có thay đổi (tránh commit rỗng)
           git commit -m "Auto backup database" || echo "No changes to commit"
 
-      # --- PHẦN BẠN CẦN SỬA LỖI CĂN LỀ NẰM Ở ĐÂY ---
+      # --- 3. Đẩy lên GitHub ---
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+          branch: 
+          
